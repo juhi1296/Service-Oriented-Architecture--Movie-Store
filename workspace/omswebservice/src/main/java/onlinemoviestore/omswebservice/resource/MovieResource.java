@@ -1,0 +1,75 @@
+package onlinemoviestore.omswebservice.resource;
+
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import onlinemoviestore.omswebservice.model.Movie;
+import onlinemoviestore.omswebservice.service.MovieService;
+
+@Path("/movies")
+public class MovieResource {
+	MovieService ms=new MovieService();
+	
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String addMovie(Movie movie){
+		try{
+			System.out.println("m "+movie.toString());
+			ms.addMovie(movie);
+			return "Done";
+		}catch(Exception e){
+			return "Error";
+		}
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Movie> getAllMovies(){
+		
+			try {
+				return ms.getAllMovies();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+		
+	}
+	
+	@Path("/genre/{genre}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Movie> getMovieByGenre(@PathParam("genre") String genre) {
+		return ms.getMovieByGenre(genre);
+	}
+	
+	
+	@Path("/{movie_id}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Movie getMovieById(@PathParam("movie_id") long id){
+		return ms.getMovieById(id);
+	}
+	
+	@DELETE
+	@Path("/{movie_id}")
+	public void deleteMovie(@PathParam("movie_id") long movie_id){
+		ms.deleteMovie(movie_id);
+	}
+	
+	@PUT
+	@Path("/{movie_id}")
+	public void updateMovie(@PathParam("movie_id") long movie_id,Movie movie){
+		ms.updateMovie(movie_id, movie);
+	}
+}

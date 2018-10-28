@@ -1,0 +1,58 @@
+package org.priyendu.mail;
+
+import java.util.Date;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public class MailInfo {
+	private Date time;
+	private String msg;
+	private String emailid;
+	
+	
+	
+	public Date getTime() {
+		return time;
+	}
+
+
+
+	public void setTime(Date time) {
+		this.time = time;
+	}
+
+
+
+	public String getMsg() {
+		return msg;
+	}
+
+
+
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
+
+
+
+	public String getEmailid() {
+		return emailid;
+	}
+
+
+
+	public void setEmailid(String emailid) {
+		this.emailid = emailid;
+	}
+
+
+
+	public MailInfo getInfo(){
+		MailInfo mf=new MailInfo();
+		mf.setTime(new Date(100000));
+		mf.setMsg("meeting at 6");
+		mf.setEmailid("priyendu.mori@gmail.com");
+		return mf; 
+	}
+}

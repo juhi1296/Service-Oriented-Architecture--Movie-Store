@@ -1,0 +1,87 @@
+package org.priyendu.mail;
+
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Properties;    
+import javax.mail.*;    
+import javax.mail.internet.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;    
+
+@Path("/mail")
+public class Mail {
+	@POST
+	//@Path("/{emailid}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public static String sendMail(MailInfo tm) {    
+        //from,password,to,subject,message  
+		System.out.println("in method");
+        Mailer.send("sdpchatbot@gmail.com","sendingmail",tm.getEmailid(),"reminder",tm.getMsg(),tm.getTime());  
+        //change from, password and to
+        System.out.println();
+        //return new MailInfo().getInfo();
+        return "sent";
+    }
+	
+	@GET
+	@Path("/get")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public MailInfo getInfo(){
+		//return new MailInfo().getInfo();
+		//return "sgrs";
+		
+		return new MailInfo().getInfo();
+	}
+	
+	@POST
+	@Path("/{emailid}/{test}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String test(@PathParam("time") Date time,@PathParam("emailid") String emailid){
+		System.out.println("{test}");
+		return "ad  "+time+"  "+emailid+" "+new Date().toString();
+		
+	}
+}
+
+
+    
+class Mailer{  
+    public static void send(final String from,final String password,String to,String sub,String msg,Timestamp time){  
+          //Get properties object    
+        Timestamp now=new Timestamp(new Date().getTime());
+        while(!((new Timestamp(new Date().getTime())).equals(time)));
+    	Properties props = new Properties();    
+          props.put("mail.smtp.host", "smtp.gmail.com");    
+          props.put("mail.smtp.socketFactory.port", "465");    
+          props.put("mail.smtp.socketFactory.class",    
+                    "javax.net.ssl.SSLSocketFactory");    
+          props.put("mail.smtp.auth", "true");    
+          props.put("mail.smtp.port", "465");    
+          //get Session   
+          Session session = Session.getDefaultInstance(props,    
+           new javax.mail.Authenticator() {    
+           protected PasswordAuthentication getPasswordAuthentication() {    
+           return new PasswordAuthentication(from,password);  
+           }    
+          });    
+          //compose message    
+          try {    
+           MimeMessage message = new MimeMessage(session);    
+           message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));    
+           message.setSubject(sub);    
+           message.setText(msg);    
+           //send message  
+           Transport.send(message);    
+           System.out.println("message sent successfully");    
+          } catch (MessagingException e) {throw new RuntimeException(e);}    
+             
+    }  
+}  
